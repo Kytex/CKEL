@@ -18,6 +18,11 @@ export default class EntryAbility extends UIAbility {
   onWindowStageCreate(windowStage: window.WindowStage): void {
     // Main window is created, set main page for this ability
     hilog.info(DOMAIN, 'testTag', '%{public}s', 'Ability onWindowStageCreate');
+
+    windowStage.getMainWindow((err,windowClass)=>{
+      if (err.code) return
+      windowClass.setWindowLayoutFullScreen(true)
+    })
     windowStage.loadContent('pages/Splash', (err) => {
       if (err.code) {
         hilog.error(DOMAIN, 'testTag', 'Failed to load the content. Cause: %{public}s', JSON.stringify(err));
@@ -25,7 +30,6 @@ export default class EntryAbility extends UIAbility {
       }
       hilog.info(DOMAIN, 'testTag', 'Succeeded in loading the content.');
     });
-    this.showPrivacyPolicyDialog()
   }
 
   onWindowStageDestroy(): void {
@@ -43,7 +47,4 @@ export default class EntryAbility extends UIAbility {
     hilog.info(DOMAIN, 'testTag', '%{public}s', 'Ability onBackground');
   }
 
-  showPrivacyPolicyDialog(){
-    Prompt.showDialog({title:"温馨提示",message:"我们非常重视您的个人信息和隐私保护。为向您提供更好的差旅服务，在使用我们的产品前，请您阅读完整版"})
-  }
 }

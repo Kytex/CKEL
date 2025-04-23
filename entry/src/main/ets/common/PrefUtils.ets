@@ -13,4 +13,16 @@ export class PrefUtils {
   static isPrivacyAgree(context: Context) {
     return Boolean(PrefUtils.getInstance(context).getSync("isAgree", false))
   }
+
+  static setPrivacyAgree(context: Context){
+    return PrefUtils.getInstance(context).putSync("isAgree",true)
+  }
+
+  static isFirstIn(context: Context){
+    return Boolean(PrefUtils.getInstance(context).getSync("isFirstIn", true));
+  }
+
+  static setIsFirstIn(context: Context,isFirstIn:boolean){
+    return PrefUtils.getInstance(context).putSync("isFirstIn",isFirstIn)
+  }
 }

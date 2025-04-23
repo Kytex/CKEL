@@ -1,5 +1,6 @@
 import { PrefUtils } from '../common/PrefUtils';
 import router from '@ohos.router';
+import application from '@ohos.app.ability.application';
 
 @Entry
 @Component
@@ -64,7 +65,9 @@ struct Splash {
           this.isPrivacyAgree = true
           PrefUtils.setPrivacyAgree(getContext(this))
         })
-        Text("不同意退出").fontColor("#000000").margin({ top: 10 })
+        Text("不同意退出").fontColor("#000000").margin({ top: 10 }).onClick(()=>{
+          getContext(this).getApplicationContext().killAllProcesses()
+        })
       }
       .borderRadius(12)
       .backgroundColor($r('app.color.privacy_dialog_background'))

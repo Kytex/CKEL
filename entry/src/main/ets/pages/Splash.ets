@@ -55,24 +55,25 @@ struct Splash {
 
           })
           Span("的所有条款，包括：")
-        }.fontColor("#000000").margin({ top: 10 })
+        }.fontColor("#000000").margin({ top: $r("app.float.fp_10") })
 
         Text("1、适用范围，在您使用差客e族应用时我们可能会基于具体业务场景收集您的个人信息；").fontColor("#000000")
         Text("2、信息使用，基于您的授权，我们可能会收集包括地理位置，设备信息，您有权拒绝或取消授权；").fontColor("#000000")
         Text("3、信息披露共享和使用，未经你同意差客e族应用不会向任何第三方共享您的个人信息。").fontColor("#000000")
 
-        Button("同意", { type: ButtonType.Normal }).borderRadius(5).margin({ top: 20 }).width("100%").onClick(() => {
+        Button("同意", { type: ButtonType.Normal }).borderRadius(5).margin({ top: $r("app.float.fp_20") }).width("100%").onClick(() => {
           this.isPrivacyAgree = true
           PrefUtils.setPrivacyAgree(getContext(this))
         })
-        Text("不同意退出").fontColor("#000000").margin({ top: 10 }).onClick(()=>{
+        Text("不同意退出").fontColor("#000000").margin({ top: $r("app.float.fp_10") }).onClick(()=>{
           getContext(this).getApplicationContext().killAllProcesses()
         })
       }
-      .borderRadius(12)
+      .borderRadius($r("app.float.fp_12"))
       .backgroundColor($r('app.color.privacy_dialog_background'))
-      .margin({ left: 10, right: 10 })
-      .padding(15)
+      .margin({ left: $r("app.float.fp_10"), right: $r("app.float.fp_10") })
+      .width($r("app.float.fp_500"))
+      .padding($r("app.float.fp_15"))
     }
     .backgroundColor($r('app.color.privacy_container_background'))
     .width('100%')

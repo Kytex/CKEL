@@ -2,6 +2,7 @@ import { AbilityConstant, ConfigurationConstant, UIAbility, Want } from '@kit.Ab
 import { hilog } from '@kit.PerformanceAnalysisKit';
 import { Prompt, prompt, window } from '@kit.ArkUI';
 import { preferences, sendablePreferences } from '@kit.ArkData';
+import { PrefUtils } from '../utils/PrefUtils';
 
 const DOMAIN = 0x0000;
 
@@ -18,7 +19,7 @@ export default class EntryAbility extends UIAbility {
   onWindowStageCreate(windowStage: window.WindowStage): void {
     // Main window is created, set main page for this ability
     hilog.info(DOMAIN, 'testTag', '%{public}s', 'Ability onWindowStageCreate');
-
+    PrefUtils.init(this.context)
     windowStage.getMainWindow((err,windowClass)=>{
       if (err.code) return
       windowClass.setWindowLayoutFullScreen(true)

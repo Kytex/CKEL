@@ -2,6 +2,7 @@
   "src": [
     "pages/Splash",
     "pages/LoginPage",
-    "pages/HomePage"
+    "pages/HomePage",
+    "pages/FindBackPwdPage"
   ]
 }

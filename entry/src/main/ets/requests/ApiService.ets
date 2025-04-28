@@ -4,12 +4,24 @@ import { UrlConstants } from '../constants/UrlConstants';
 import { PrefUtils } from '../utils/PrefUtils';
 import { axiosClient } from './AxiosClient'
 import { DataResult } from './DataResult'
+import map from '@hms.core.map.map';
+import { HashMap } from '@kit.ArkTS';
+import { LoginPostBody } from '../interfaces/CustomeInterfaces';
 
 export function getUserInfo() {
   return axiosClient.get<DataResult<UserInfo>>({
     url: UrlConstants.API_LOGIN_JAVA + "cuser/getuser",
     showLoading: false,
     headers: defaultHeaders() as AxiosRequestHeaders
+  })
+}
+
+export function requestLogin(requestBody: LoginPostBody) {
+  return axiosClient.post<DataResult<UserInfo>>({
+    url: UrlConstants.API_LOGIN_JAVA + "cuser/login",
+    showLoading: false,
+    headers: defaultHeaders() as AxiosRequestHeaders,
+    data: requestBody
   })
 }
 

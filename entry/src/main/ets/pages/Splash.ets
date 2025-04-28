@@ -67,6 +67,7 @@ struct Splash {
     })
   }
 
+
   @Builder
   showPrivacyDialog() {
     Flex({ justifyContent: FlexAlign.Center, alignItems: ItemAlign.Center }) {

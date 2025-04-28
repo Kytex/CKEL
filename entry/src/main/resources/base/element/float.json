@@ -5,6 +5,10 @@
       "value": "50fp"
     },
     {
+      "name": "fp_1",
+      "value": "1fp"
+    },
+    {
       "name": "fp_5",
       "value": "5fp"
     },
@@ -17,12 +21,40 @@
       "value": "12fp"
     },
     {
+      "name": "fp_13",
+      "value": "13fp"
+    },
+    {
+      "name": "fp_14",
+      "value": "14fp"
+    },
+    {
       "name": "fp_15",
       "value": "15fp"
     },
     {
       "name": "fp_20",
       "value": "20fp"
+    },
+    {
+      "name": "fp_25",
+      "value": "25fp"
+    },
+    {
+      "name": "fp_40",
+      "value": "40fp"
+    },
+    {
+      "name": "fp_50",
+      "value": "50fp"
+    },
+    {
+      "name": "fp_90",
+      "value": "90fp"
+    },
+    {
+      "name": "fp_100",
+      "value": "100fp"
     },
     {
       "name": "fp_200",

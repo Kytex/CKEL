@@ -1,6 +1,20 @@
 {
   "app": {
-    "signingConfigs": [],
+    "signingConfigs": [
+      {
+        "name": "default",
+        "type": "HarmonyOS",
+        "material": {
+          "certpath": "C:\\Users\\kytex\\.ohos\\config\\default_CKEL_rYVYdvP4t-cwAVL--qwSQs1SURSJZYfOPHgCOtFO9PQ=.cer",
+          "keyAlias": "debugKey",
+          "keyPassword": "0000001BB3D93DC1F9FCA32051C27FF09ABAA953B55F8710E5D431F3226E8ACCB23A46767ABB7F86153664",
+          "profile": "C:\\Users\\kytex\\.ohos\\config\\default_CKEL_rYVYdvP4t-cwAVL--qwSQs1SURSJZYfOPHgCOtFO9PQ=.p7b",
+          "signAlg": "SHA256withECDSA",
+          "storeFile": "C:\\Users\\kytex\\.ohos\\config\\default_CKEL_rYVYdvP4t-cwAVL--qwSQs1SURSJZYfOPHgCOtFO9PQ=.p12",
+          "storePassword": "0000001B99C2473A0478E53F444932BB215B8CF1E8DEDAC12D67C5435FAD8904F9926C5FC704302260CBE0"
+        }
+      }
+    ],
     "products": [
       {
         "name": "default",

@@ -1,4 +1,5 @@
 export interface InputWithClearParams {
+  index:number
   hint: string
   marginTop: number | Resource
   isShowBoarder: boolean

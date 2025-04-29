@@ -6,9 +6,9 @@ import { requestLogin } from '../requests/ApiService'
 @Component
 struct Login {
   @State loginType: number = 0 //0：手机号，密码登录 1：图形验证码登录；2：工号登录
-  @State pwdHint: string = ""
+  @State pwdHint: string = "输入密码"
   @State inputPhone: string = ""
-  @State inputValidCode: string = ""
+  @State inputImageCode: string = ""
   @State inputPwd: string = ""
   @State isPrivacyChecked: boolean = false
 
@@ -16,6 +16,7 @@ struct Login {
     Column() {
       Text("差客e旅登录").fontSize($r("app.float.fp_25"))
       this.InputWithClear({
+        index: 0,
         hint: (this.loginType != 2) ? "输入手机号码/邮箱" : "输入工号",
         marginTop: $r("app.float.fp_100"),
         isShowBoarder: true,
@@ -26,19 +27,21 @@ struct Login {
       if (this.loginType == 1) {
         Row() {
           this.InputWithClear({
+            index: 1,
             hint: "输入图片验证码",
             marginTop: 0,
             isShowBoarder: false,
             inputType: InputType.Number
           }, (value) => {
-            this.inputValidCode = value
+            this.inputImageCode = value
           })
           Image("").width($r("app.float.fp_90"))
         }.height($r("app.float.fp_50")).border({ width: { bottom: $r("app.float.fp_1") }, color: "#f6f6f6", radius: 0 })
       }
       Row() {
         this.InputWithClear({
-          hint: (this.loginType == 0) ? "输入密码" : (this.loginType == 1) ? "输入短信验证码" : "输入登录密码",
+          index: 2,
+          hint: this.pwdHint,
           marginTop: 0,
           isShowBoarder: false,
           inputType: (this.loginType == 1) ? InputType.Number : InputType.Password
@@ -69,7 +72,7 @@ struct Login {
         .width("100%")
         .borderRadius($r("app.float.fp_5"))
         .enabled((this.loginType == 0 || this.loginType == 2) && (this.inputPhone != "" && this.inputPwd != "") ||
-          (this.loginType == 1 && this.inputValidCode != "" && this.inputPhone != "" && this.inputPwd != ""))
+          (this.loginType == 1 && this.inputImageCode != "" && this.inputPhone != "" && this.inputPwd != ""))
         .onClick(() => {
           if (this.isPrivacyChecked) {
             this.login()
@@ -98,6 +101,7 @@ struct Login {
           .visibility((this.loginType != 0) ? Visibility.Visible : Visibility.Hidden)
           .onClick(() => {
             this.loginType = 2
+            this.pwdHint = "输入登录密码"
           })
         Text((this.loginType == 0) ? "其他登录方式" : "账号密码登录")
           .fontColor("#1b86f7")
@@ -105,8 +109,10 @@ struct Login {
           .onClick(() => {
             if (this.loginType == 0) {
               this.loginType = 1
+              this.pwdHint = "输入短信验证码"
             } else {
               this.loginType = 0
+              this.pwdHint = "输入密码"
             }
           })
       }.margin({ top: $r("app.float.fp_20") }).justifyContent(FlexAlign.SpaceBetween).width("100%")
@@ -118,7 +124,7 @@ struct Login {
 
   @Builder
   InputWithClear(params: InputWithClearParams, callback: EditableTextOnChangeCallback) {
-    TextInput({ placeholder: params.hint })
+    TextInput({ placeholder: this.getTextHint(params) })
       .placeholderColor("#999999")
       .fontColor("#111111")
       .height($r("app.float.fp_50"))
@@ -133,8 +139,28 @@ struct Login {
       .onChange(callback)
   }
 
+  getTextHint(params: InputWithClearParams) {
+    if (params.index == 0) {
+      if (this.loginType == 2) {
+        params.hint = "输入工号"
+      } else {
+        params.hint = "输入手机号码 / 邮箱"
+      }
+    } else if (params.index == 2) {
+      params.hint = this.pwdHint
+    }
+    return params.hint
+  }
+
   login() {
-    requestLogin({}).then(() => {
+    requestLogin({
+      account: this.inputPhone,
+      pwd: this.inputPwd,
+      code: this.loginType == 1 ? this.inputPwd : "",
+      pictureAnswer: this.inputImageCode,
+      pictureKeyID: this.inputPwd,
+      outAccount: this.inputPhone
+    }).then(() => {
 
     })
   }

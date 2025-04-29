@@ -14,6 +14,7 @@ export const axiosClient = new AxiosHttpRequest({
       LogUtils.debug('网络请求Request 请求方法:', `${config.method}`);
       LogUtils.debug('网络请求Request 请求头:', `${config.headers}`);
       LogUtils.debug('网络请求Request 请求url:', `${config.url}`);
+      LogUtils.debug('网络请求Request 请求body:', `${config.data}`);
       axiosClient.config.showLoading = config.showLoading
       if (config.showLoading) {
         // showLoadingDialog("加载中...")

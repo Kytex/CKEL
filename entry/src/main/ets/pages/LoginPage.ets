@@ -19,6 +19,7 @@ struct Login {
   @State inputPhone: string = ""
   @State inputImageCode: string = ""
   @State inputPwd: string = ""
+  @State inputSmsCode: string = ""
   @State isPrivacyChecked: boolean = false
   @State imageCodeUrl: string | Resource = ""
   loginResponseBusCode: number = 0
@@ -29,27 +30,17 @@ struct Login {
     let loginConfig: LoginUIConfig = { loginType: this.loginType }
     switch (this.loginType) {
       case LOGIN_TYPE_PWD:
-        loginConfig.hint1 = "输入手机号/邮箱"
-        loginConfig.hint3 = "输入密码"
         loginConfig.textRight = "其他登录方式"
         break
       case LOGIN_TYPE_SMS:
-        loginConfig.hint1 = "输入手机号"
-        loginConfig.hint2 = "输入图片验证码"
-        loginConfig.hint3 = "输入短信验证码"
         loginConfig.textLeft = "工号登录"
         loginConfig.textRight = "账号密码登录"
         break
       case LOGIN_TYPE_JOB:
-        loginConfig.hint1 = "输入工号"
-        loginConfig.hint3 = "输入登录密码"
         loginConfig.textLeft = "手机验证码登录"
         loginConfig.textRight = "账号密码登录"
         break
       case LOGIN_TYPE_OTHER:
-        loginConfig.hint1 = "输入手机号/邮箱"
-        loginConfig.hint2 = "输入图片验证码"
-        loginConfig.hint3 = "输入短信验证码"
         loginConfig.textLeft = "工号登录"
         loginConfig.textRight = "账号密码登录"
         break
@@ -60,68 +51,15 @@ struct Login {
   build() {
     Column() {
       Text("差客e旅登录").fontSize($r("app.float.fp_25"))
-      this.InputWithClear({
-        index: 0,
-        hint: this.getLoginUiConfig().hint1,
-        marginTop: $r("app.float.fp_100"),
-        isShowBoarder: true,
-        inputType: InputType.Normal
-      }, (value) => {
-        this.inputPhone = value
-      })
-      if (this.loginType == LOGIN_TYPE_SMS || this.loginType == LOGIN_TYPE_OTHER) {
-        Row() {
-          this.InputWithClear({
-            index: 1,
-            hint: this.getLoginUiConfig().hint2,
-            marginTop: 0,
-            isShowBoarder: false,
-            inputType: InputType.Number
-          }, (value) => {
-            this.inputImageCode = value
-          })
-          Image(this.imageCodeUrl)
-            .alt($r("app.media.icon_hotel_no_img"))
-            .onError(() => {
-              this.imageCodeUrl = $r("app.media.icon_hotel_no_img")
-            })
-            .width($r("app.float.fp_90"))
-            .objectFit(ImageFit.Contain)
-            .height($r("app.float.fp_50"))
-        }.width("100%")
-        .height($r("app.float.fp_50"))
-        .border({ width: { bottom: $r("app.float.fp_1") }, color: "#f6f6f6", radius: 0 })
-        .justifyContent(FlexAlign.SpaceBetween)
+      if (this.loginType == LOGIN_TYPE_PWD) {
+        this.buildPwd()
+      } else if (this.loginType == LOGIN_TYPE_OTHER) {
+        this.buildOther()
+      } else if (this.loginType == LOGIN_TYPE_JOB) {
+        this.buildJob()
+      } else if (this.loginType == LOGIN_TYPE_SMS) {
+        this.buildPhoneSms()
       }
-      Row() {
-        this.InputWithClear({
-          index: 2,
-          hint: this.getLoginUiConfig().hint3,
-          marginTop: 0,
-          isShowBoarder: false,
-          inputType: (this.loginType == LOGIN_TYPE_OTHER) ? InputType.Number : InputType.Password
-        }, (value) => {
-          this.inputPwd = value
-        })
-        if (this.loginType == LOGIN_TYPE_PWD) {
-          Text("忘记密码？").fontColor("#1b86f7").fontSize($r("app.float.fp_14"))
-            .onClick(() => {
-              router.pushUrl({ url: "pages/FindBackPwdPage" })
-            })
-        }
-        if (this.loginType == LOGIN_TYPE_OTHER) {
-          Button("获取验证码", { type: ButtonType.Normal })
-            .fontColor("#1b86f7")
-            .backgroundColor("#F4F9FF")
-            .borderRadius($r("app.float.fp_5"))
-            .fontSize($r("app.float.fp_14"))
-            .padding($r("app.float.fp_5"))
-        }
-      }
-      .width("100%")
-      .border({ width: { bottom: $r("app.float.fp_1") }, color: "#f6f6f6", radius: 0 })
-      .height($r("app.float.fp_50"))
-
       Button("登录", { type: ButtonType.Normal })
         .margin({ top: $r("app.float.fp_40") })
         .width("100%")
@@ -182,31 +120,108 @@ struct Login {
   }
 
   @Builder
-  InputWithClear(params: InputWithClearParams, callback: EditableTextOnChangeCallback) {
-
-    TextInput({ placeholder: this.getTextHint(params) })
+  buildInput(hint: string, isShowBoarder: boolean, marginTop: number | Resource, inputType: InputType,
+    callback: EditableTextOnChangeCallback) {
+    TextInput({ placeholder: hint })
       .placeholderColor("#999999")
       .fontColor("#111111")
       .height($r("app.float.fp_50"))
       .cancelButton({ style: CancelButtonStyle.INPUT, icon: { src: $r("app.media.multi_city_clear_x") } })
       .flexShrink(1)
       .backgroundColor(Color.Transparent)
-      .border({ width: { bottom: params.isShowBoarder ? $r("app.float.fp_1") : 0 }, color: "#f6f6f6", radius: 0 })
-      .margin({ top: params.marginTop })
+      .border({ width: { bottom: isShowBoarder ? $r("app.float.fp_1") : 0 }, color: "#f6f6f6", radius: 0 })
+      .margin({ top: marginTop })
       .padding({ left: 0, right: 0 })
       .maxLines(1)
-      .type(params.inputType)
+      .type(inputType)
       .onChange(callback)
   }
 
-  getTextHint(params: InputWithClearParams) {
-    let loginConfig = this.getLoginUiConfig()
-    if (params.index == 0) {
-      params.hint = loginConfig.hint1
-    } else if (params.index == 2) {
-      params.hint = loginConfig.hint3
-    }
-    return params.hint
+  @Builder
+  buildInputWithImageCode(hint: string, callback: EditableTextOnChangeCallback) {
+    Row() {
+      this.buildInput(hint, false, 0, InputType.Number, callback)
+      Image(this.imageCodeUrl)
+        .alt($r("app.media.icon_hotel_no_img"))
+        .onError(() => {
+          this.imageCodeUrl = $r("app.media.icon_hotel_no_img")
+        })
+        .width($r("app.float.fp_90"))
+        .objectFit(ImageFit.Contain)
+        .height($r("app.float.fp_50"))
+    }.width("100%")
+    .height($r("app.float.fp_50"))
+    .border({ width: { bottom: $r("app.float.fp_1") }, color: "#f6f6f6", radius: 0 })
+    .justifyContent(FlexAlign.SpaceBetween)
+  }
+
+  @Builder
+  buildInputWithButton(inputHint: string, buttonHint: string, callback: EditableTextOnChangeCallback) {
+    Row() {
+      this.buildInput(inputHint, false, 0, InputType.Number, callback)
+      Button(buttonHint, { type: ButtonType.Normal })
+        .fontColor("#1b86f7")
+        .backgroundColor(buttonHint == "忘记密码?" ? Color.Transparent : "#F4F9FF")
+        .borderRadius($r("app.float.fp_5"))
+        .fontSize($r("app.float.fp_14"))
+        .padding($r("app.float.fp_5"))
+        .onClick(() => {
+          if (buttonHint == "忘记密码?") {
+            router.pushUrl({ url: "pages/FindBackPwdPage" })
+          } else {
+            this.getSmsCode()
+          }
+        })
+    }.width("100%")
+    .height($r("app.float.fp_50"))
+    .border({ width: { bottom: $r("app.float.fp_1") }, color: "#f6f6f6", radius: 0 })
+    .justifyContent(FlexAlign.SpaceBetween)
+  }
+
+  @Builder
+  buildPwd() {
+    this.buildInput("输入手机号码/邮箱", true, $r("app.float.fp_100"), InputType.Normal, (value) => {
+      this.inputPhone = value
+    })
+    this.buildInputWithButton("输入密码", "忘记密码?", (value) => {
+      this.inputPwd = value
+    })
+  }
+
+  @Builder
+  buildOther() {
+    this.buildInput("输入手机号码/邮箱", true, $r("app.float.fp_100"), InputType.Normal, (value) => {
+      this.inputPhone = value
+    })
+    this.buildInputWithImageCode("输入图片验证码", (value) => {
+      this.inputImageCode = value
+    })
+    this.buildInputWithButton("输入短信验证码", "获取验证码", (value) => {
+      this.inputSmsCode = value
+    })
+  }
+
+  @Builder
+  buildJob() {
+    this.buildInput("输入工号", true, $r("app.float.fp_100"), InputType.Normal, (value) => {
+      this.inputPhone = value
+    })
+    this.buildInput("输入登录密码", true, 0, InputType.Normal, (value) => {
+      this.inputPhone = value
+    })
+  }
+
+  @Builder
+  buildPhoneSms() {
+    this.buildInput("输入手机号", true, $r("app.float.fp_100"), InputType.PhoneNumber, (value) => {
+      this.inputPhone = value
+    })
+    this.buildInputWithImageCode("输入图片验证码", (value) => {
+      this.inputImageCode = value
+    })
+    this.buildInputWithButton("输入短信验证码", "获取验证码", (value) => {
+      this.inputSmsCode = value
+    })
   }
 
   handleLogin() {
@@ -220,10 +235,10 @@ struct Login {
       loginParams.pictureAnswer = this.inputImageCode
       loginParams.pictureKeyID = this.verifyCode
     } else if (this.loginType == LOGIN_TYPE_SMS) {
-      loginParams.code = this.inputPwd
+      loginParams.code = this.inputSmsCode
     } else if (this.loginType == LOGIN_TYPE_JOB && this.loginResponseBusCode == 2002 ||
       this.loginType == LOGIN_TYPE_JOB && this.loginResponseBusCode == 2004) {
-      loginParams.userPhone = this.bindPhone
+      loginParams.userPhone = "bindPhone"
       loginParams.code = "smsCode"
     } else if (this.loginType != LOGIN_TYPE_JOB && this.loginResponseBusCode == 2011) {
       loginParams.outAccount = "jobNumber"
@@ -280,6 +295,10 @@ struct Login {
   loadImageValidCode() {
     this.verifyCode = util.generateRandomUUID().toString().replace("-", "")
     this.imageCodeUrl = UrlConstants.API_JAVA + UrlConstants.VERIFY_CODE_URL + "?id=" + this.verifyCode;
+  }
+
+  getSmsCode() {
+
   }
 }
 

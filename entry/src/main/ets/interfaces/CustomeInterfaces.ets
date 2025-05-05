@@ -1,8 +1,5 @@
 export interface LoginUIConfig {
   loginType: number,
-  hint1?: string,
-  hint2?: string,
-  hint3?: string,
   textLeft?: string,
   textRight?: string
 }

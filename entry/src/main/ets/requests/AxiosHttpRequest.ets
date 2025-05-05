@@ -57,7 +57,7 @@ export class AxiosHttpRequest {
 
   get<T = CommonType>(config: HttpRequestConfig): Promise<T> {
     config.method = 'GET'
-   // config.params = "123456"
+    // config.params = "123456"
     return this.request(config);
   }
 

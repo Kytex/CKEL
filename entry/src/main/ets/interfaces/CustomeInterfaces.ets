@@ -1,6 +1,15 @@
+export interface LoginUIConfig {
+  loginType: number,
+  hint1?: string,
+  hint2?: string,
+  hint3?: string,
+  textLeft?: string,
+  textRight?: string
+}
+
 export interface InputWithClearParams {
-  index:number
-  hint: string
+  index: number
+  hint?: string
   marginTop: number | Resource
   isShowBoarder: boolean
   inputType: InputType

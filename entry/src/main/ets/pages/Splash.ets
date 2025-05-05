@@ -23,7 +23,7 @@ struct Splash {
             Image($r('app.media.icon_guide2')).width("100%").height("100%")
             Image($r('app.media.icon_guide3')).width("100%").height("100%").onClick(() => {
               this.checkUserLoginState()
-              PrefUtils.setIsFirstIn(false)
+              PrefUtils.putBoolean(PrefUtils.KEY_IS_LOGIN, false)
             })
           }
           .displayCount(1)
@@ -45,7 +45,7 @@ struct Splash {
 
   aboutToAppear(): void {
     this.isPrivacyAgree = PrefUtils.isPrivacyAgree()
-    this.isFirst = PrefUtils.isFirstIn()
+    this.isFirst = PrefUtils.getBoolean(PrefUtils.KEY_IS_LOGIN)
     if (!this.isFirst && this.isPrivacyAgree) {
       setTimeout(() => {
         this.checkUserLoginState()
@@ -54,9 +54,9 @@ struct Splash {
   }
 
   checkUserLoginState() {
-    getUserInfo().then((data) => {
-      LogUtils.debug("kytex", "getUserInfo" + data)
-      if (null != data.ext) {
+    getUserInfo().then((result) => {
+      LogUtils.debug("kytex", "getUserInfo" + result)
+      if (null != result.data) {
         router.replaceUrl({ url: "pages/HomePage" })
       } else {
         router.replaceUrl({ url: "pages/LoginPage" })
@@ -66,7 +66,6 @@ struct Splash {
       router.replaceUrl({ url: "pages/LoginPage" })
     })
   }
-
 
   @Builder
   showPrivacyDialog() {

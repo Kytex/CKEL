@@ -7,7 +7,8 @@
  */
 export class DataResult<T> {
   code: number = 0
-  text: string = ""
-  ext: T | null = null
+  busCode: number = 0
+  message: string = ""
+  data: T | null = null
 }
 

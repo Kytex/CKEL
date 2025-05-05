@@ -1,1 +1,7 @@
-const prefer_file_name = "app_share"
+export class AppConst {
+  static accessToken: string = ""
+  static refreshToken: string = ""
+}
+
+
+

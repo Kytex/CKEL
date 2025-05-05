@@ -3,6 +3,7 @@
     "pages/Splash",
     "pages/LoginPage",
     "pages/HomePage",
-    "pages/FindBackPwdPage"
+    "pages/FindBackPwdPage",
+    "pages/CommonWebPage"
   ]
 }

@@ -25,6 +25,16 @@ export function requestLogin(requestBody: LoginPostBody) {
   })
 }
 
+//获取验证码
+export function getSmsCode(phone: string, answer: string, answerKeyID: string) {
+  return axiosClient.get<DataResult<string>>({
+    url: UrlConstants.API_LOGIN_JAVA + "cuser/verificationcode/sendLoginMessage?phone=" + phone + "&answer=" + answer +
+      "&answerKeyID=" + answerKeyID,
+    showLoading: false,
+    headers: defaultHeaders() as AxiosRequestHeaders
+  })
+}
+
 export function defaultHeaders(): Record<string, string> {
   const headers: Record<string, string> = {
     "Accept": "application/json",

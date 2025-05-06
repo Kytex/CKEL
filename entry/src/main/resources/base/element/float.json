@@ -49,12 +49,24 @@
       "value": "50fp"
     },
     {
+      "name": "fp_86",
+      "value": "86fp"
+    },
+    {
       "name": "fp_90",
       "value": "90fp"
     },
     {
       "name": "fp_100",
       "value": "100fp"
+    },
+    {
+      "name": "fp_160",
+      "value": "160fp"
+    },
+    {
+      "name": "fp_180",
+      "value": "180fp"
     },
     {
       "name": "fp_200",

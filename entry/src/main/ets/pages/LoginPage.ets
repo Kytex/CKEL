@@ -22,7 +22,7 @@ struct Login {
   @State inputSmsCode: string = ""
   @State isPrivacyChecked: boolean = false
   @State imageCodeUrl: string | Resource = ""
-  loginResponseBusCode: number = 0
+  @State loginResponseBusCode: number = 0
   verifyCode: string = ""
   bindPhone: string = ""
 
@@ -50,7 +50,7 @@ struct Login {
 
   build() {
     Column() {
-      Text("差客e旅登录").fontSize($r("app.float.fp_25"))
+      Text("差客e旅登录").fontSize($r("app.float.fp_25")).margin({top:$r("app.float.fp_160")})
       if (this.loginType == LOGIN_TYPE_PWD) {
         this.buildPwd()
       } else if (this.loginType == LOGIN_TYPE_OTHER) {
@@ -116,7 +116,6 @@ struct Login {
     }.padding({ left: $r("app.float.fp_20"), right: $r("app.float.fp_20") })
     .width("100%")
     .height("100%")
-    .justifyContent(FlexAlign.Center)
   }
 
   @Builder
@@ -209,6 +208,17 @@ struct Login {
     this.buildInput("输入登录密码", true, 0, InputType.Normal, (value) => {
       this.inputPhone = value
     })
+    if (this.loginResponseBusCode == 2002 || this.loginResponseBusCode == 2004) {
+      this.buildInputWithImageCode("输入图片验证码", (value) => {
+
+      })
+      this.buildInput("输入手机号码", true, 0, InputType.PhoneNumber, (value) => {
+
+      })
+      this.buildInputWithButton("输入验证码", "获取验证码", (value) => {
+
+      })
+    }
   }
 
   @Builder

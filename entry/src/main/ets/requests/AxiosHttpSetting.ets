@@ -12,6 +12,7 @@ export interface InterceptorHooks {
   // 请求拦截器
   requestInterceptor?: (config: HttpRequestConfig) => Promise<HttpRequestConfig>;
   requestInterceptorCatch?: (error: CommonType) => CommonType;
+
   // 相应拦截器
   responseInterceptor?: (response: AxiosResponse) => AxiosResponse | Promise<AxiosResponse>;
   responseInterceptorCatch?: (error: CommonType) => CommonType;
@@ -23,5 +24,5 @@ export interface HttpRequestConfig extends InternalAxiosRequestConfig {
   checkLoginState?: boolean //校验用户登陆状态
   needJumpToLogin?: boolean //是否需要跳转到登陆页面
   interceptorHooks?: InterceptorHooks
-  appParams?:CommonType
+  appParams?: CommonType
 }

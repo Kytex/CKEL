@@ -1,7 +1,27 @@
+import { router } from '@kit.ArkUI';
+
+export class JumpParams {
+  title: string = ""
+  url: string = ""
+
+  constructor(title: string, url: string) {
+    this.title = title
+    this.url = url
+  }
+}
+
 @Entry
 @Component
 struct CommonWebPage {
   @State message: string = 'Hello World';
+  title: string = ""
+  url: string = ""
+
+  aboutToAppear(): void {
+    let params = router.getParams() as JumpParams
+    this.title = params.title
+    this.url = params.url
+  }
 
   build() {
     RelativeContainer() {
@@ -21,3 +41,4 @@ struct CommonWebPage {
     .width('100%')
   }
 }
+

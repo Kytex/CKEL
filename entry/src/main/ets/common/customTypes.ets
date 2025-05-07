@@ -1,17 +1,3 @@
-export interface LoginUIConfig {
-  loginType: number,
-  textLeft?: string,
-  textRight?: string
-}
-
-export interface InputWithClearParams {
-  index: number
-  hint?: string
-  marginTop: number | Resource
-  isShowBoarder: boolean
-  inputType: InputType
-}
-
 export interface LoginPostBody {
   account?: string
   appid?: string
@@ -26,4 +12,10 @@ export interface LoginPostBody {
   bindingPhone?: string
   userPhone?: string
   outAccount?: string
+}
+
+export interface TitleBarOptions {
+  title?: string
+  isShowBack?: boolean
+  onBackClick?: (event: ClickEvent) => void
 }

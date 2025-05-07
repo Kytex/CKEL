@@ -2,8 +2,8 @@ import { PrefUtils } from '../utils/PrefUtils';
 import router from '@ohos.router';
 import { getUserInfo } from '../requests/ApiService'
 import { LogUtils } from '../utils/LogUtils';
-import { hilog } from '@kit.PerformanceAnalysisKit';
-
+import { UrlConstants } from '../constants/UrlConstants';
+import { JumpParams } from './CommonWebPage';
 
 @Entry
 @Component
@@ -23,7 +23,7 @@ struct Splash {
             Image($r('app.media.icon_guide2')).width("100%").height("100%")
             Image($r('app.media.icon_guide3')).width("100%").height("100%").onClick(() => {
               this.checkUserLoginState()
-              PrefUtils.putBoolean(PrefUtils.KEY_IS_LOGIN, false)
+              PrefUtils.putBoolean(PrefUtils.KEY_IS_FIRST, false)
             })
           }
           .displayCount(1)
@@ -44,8 +44,8 @@ struct Splash {
   }
 
   aboutToAppear(): void {
-    this.isPrivacyAgree = PrefUtils.isPrivacyAgree()
-    this.isFirst = PrefUtils.getBoolean(PrefUtils.KEY_IS_LOGIN)
+    this.isPrivacyAgree = PrefUtils.getBoolean(PrefUtils.KEY_IS_PRIVACY_AGREE)
+    this.isFirst = PrefUtils.getBoolean(PrefUtils.KEY_IS_FIRST)
     if (!this.isFirst && this.isPrivacyAgree) {
       setTimeout(() => {
         this.checkUserLoginState()
@@ -75,7 +75,10 @@ struct Splash {
         Text() {
           Span($r("app.string.privacy_message"))
           Span("《隐私政策》").fontColor(Color.Blue).onClick(() => {
-
+            let linkUrl = UrlConstants.API_H5_NEW + "#/Center/HelpDetail?id=11"
+            router.pushUrl({
+              url: "pages/CommonWebPage", params: new JumpParams("隐私政策", linkUrl)
+            })
           })
           Span("的所有条款，包括：")
         }.fontColor("#000000").margin({ top: $r("app.float.fp_10") })
@@ -90,7 +93,10 @@ struct Splash {
           .width("100%")
           .onClick(() => {
             this.isPrivacyAgree = true
-            PrefUtils.setPrivacyAgree()
+            PrefUtils.putBoolean(PrefUtils.KEY_IS_PRIVACY_AGREE, true)
+            if (!this.isFirst) {
+              this.checkUserLoginState()
+            }
           })
         Text("不同意退出").fontColor("#000000").margin({ top: $r("app.float.fp_10") }).onClick(() => {
           getContext(this).getApplicationContext().killAllProcesses()

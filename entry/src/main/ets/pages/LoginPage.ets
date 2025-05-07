@@ -1,4 +1,4 @@
-import { InputWithClearParams, LoginPostBody, LoginUIConfig } from '../interfaces/CustomeInterfaces'
+import { LoginPostBody } from '../common/customTypes'
 import { promptAction, router } from '@kit.ArkUI'
 import { requestLogin } from '../requests/ApiService'
 import CryptoJS from '@ohos/crypto-js';
@@ -6,6 +6,7 @@ import { PrefUtils } from '../utils/PrefUtils';
 import { AppConst } from '../utils/AppConst';
 import { util } from '@kit.ArkTS';
 import { UrlConstants } from '../constants/UrlConstants';
+import { JumpParams } from './CommonWebPage';
 
 const LOGIN_TYPE_PWD = 1000; //登录类型：账号密码登录
 const LOGIN_TYPE_SMS = 1001; //登录类型：短信验证码登录
@@ -23,34 +24,14 @@ struct Login {
   @State isPrivacyChecked: boolean = false
   @State imageCodeUrl: string | Resource = ""
   @State loginResponseBusCode: number = 0
+  @State textLeft: string = ""
+  @State textRight: string = "其他登录方式"
   verifyCode: string = ""
   bindPhone: string = ""
 
-  getLoginUiConfig(): LoginUIConfig {
-    let loginConfig: LoginUIConfig = { loginType: this.loginType }
-    switch (this.loginType) {
-      case LOGIN_TYPE_PWD:
-        loginConfig.textRight = "其他登录方式"
-        break
-      case LOGIN_TYPE_SMS:
-        loginConfig.textLeft = "工号登录"
-        loginConfig.textRight = "账号密码登录"
-        break
-      case LOGIN_TYPE_JOB:
-        loginConfig.textLeft = "手机验证码登录"
-        loginConfig.textRight = "账号密码登录"
-        break
-      case LOGIN_TYPE_OTHER:
-        loginConfig.textLeft = "工号登录"
-        loginConfig.textRight = "账号密码登录"
-        break
-    }
-    return loginConfig;
-  }
-
   build() {
     Column() {
-      Text("差客e旅登录").fontSize($r("app.float.fp_25")).margin({top:$r("app.float.fp_160")})
+      Text("差客e旅登录").fontSize($r("app.float.fp_25")).margin({ top: $r("app.float.fp_160") })
       if (this.loginType == LOGIN_TYPE_PWD) {
         this.buildPwd()
       } else if (this.loginType == LOGIN_TYPE_OTHER) {
@@ -83,14 +64,17 @@ struct Login {
         Text() {
           Span("已仔细阅读并同意我们的").fontColor("#666666").fontSize($r("app.float.fp_13"))
           Span("<<隐私政策>>").fontColor(Color.Blue).fontSize($r("app.float.fp_13")).onClick((event) => {
-
+            let linkUrl = UrlConstants.API_H5_NEW + "#/Center/HelpDetail?id=11"
+            router.pushUrl({
+              url: "pages/CommonWebPage", params: new JumpParams("隐私政策", linkUrl)
+            })
           })
         }
       }
       .margin({ top: $r("app.float.fp_20") })
 
       Row() {
-        Text(this.getLoginUiConfig().textLeft)
+        Text(this.textLeft)
           .fontColor("#1b86f7")
           .fontSize($r("app.float.fp_14"))
           .visibility((this.loginType != 0) ? Visibility.Visible : Visibility.Hidden)
@@ -100,8 +84,9 @@ struct Login {
             } else {
               this.loginType = LOGIN_TYPE_JOB
             }
+            this.refreshText()
           })
-        Text(this.getLoginUiConfig().textRight)
+        Text(this.textRight)
           .fontColor("#1b86f7")
           .fontSize($r("app.float.fp_14"))
           .onClick(() => {
@@ -111,6 +96,7 @@ struct Login {
             } else {
               this.loginType = LOGIN_TYPE_PWD
             }
+            this.refreshText()
           })
       }.margin({ top: $r("app.float.fp_20") }).justifyContent(FlexAlign.SpaceBetween).width("100%")
     }.padding({ left: $r("app.float.fp_20"), right: $r("app.float.fp_20") })
@@ -232,6 +218,26 @@ struct Login {
     this.buildInputWithButton("输入短信验证码", "获取验证码", (value) => {
       this.inputSmsCode = value
     })
+  }
+
+  refreshText() {
+    switch (this.loginType) {
+      case LOGIN_TYPE_PWD:
+        this.textRight = "其他登录方式"
+        break
+      case LOGIN_TYPE_SMS:
+        this.textLeft = "工号登录"
+        this.textRight = "账号密码登录"
+        break
+      case LOGIN_TYPE_JOB:
+        this.textLeft = "手机验证码登录"
+        this.textRight = "账号密码登录"
+        break
+      case LOGIN_TYPE_OTHER:
+        this.textLeft = "工号登录"
+        this.textRight = "账号密码登录"
+        break
+    }
   }
 
   handleLogin() {

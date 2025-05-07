@@ -1,3 +1,5 @@
+import { TitleBar } from '../common/builders';
+
 @Entry
 @Component
 @Preview
@@ -7,19 +9,9 @@ struct FindBackPwdPage {
 
   build() {
     Column() {
-      this.buildTitleBar()
+      TitleBar()
     }
     .height('100%')
     .width('100%')
-  }
-
-  @Builder
-  buildTitleBar() {
-    Row() {
-      Image($r("app.media.ic_title_right"))
-        .height("100%")
-        .padding({ left: $r("app.float.fp_5"), right: $r("app.float.fp_5") })
-      Text("重置登录密码1/2")
-    }.width("100%").height($r("app.float.fp_50"))
   }
 }

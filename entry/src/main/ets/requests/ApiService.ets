@@ -4,7 +4,7 @@ import { UrlConstants } from '../constants/UrlConstants';
 import { PrefUtils } from '../utils/PrefUtils';
 import { axiosClient } from './AxiosClient'
 import { DataResult } from './DataResult'
-import { LoginPostBody } from '../interfaces/CustomeInterfaces';
+import { LoginPostBody } from '../common/customTypes';
 import { JSON } from '@kit.ArkTS';
 import json from '@ohos.util.json';
 
@@ -40,7 +40,7 @@ export function defaultHeaders(): Record<string, string> {
     "Accept": "application/json",
     "Content-Type": "application/json",
     "Cache-Control": "no-cache",
-    "Authorization": PrefUtils.getAccessToken(),
+    "Authorization": PrefUtils.getString(PrefUtils.KEY_ACCESS_TOKEN),
     "api-version": "1.1"
   }
   return headers

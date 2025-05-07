@@ -6,4 +6,6 @@ export namespace UrlConstants {
 
   export const VERIFY_CODE_URL = "cuser/verificationcode/getVerify"
 
+  export const API_H5_NEW = "https://h5.zirutmc.com/"
+
 }

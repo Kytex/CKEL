@@ -86,7 +86,7 @@ export class AxiosHttpRequest {
       "Accept": "application/json",
       "Content-Type": "application/json",
       "Cache-Control": "no-cache",
-      "Authorization": PrefUtils.getAccessToken(),
+      "Authorization": PrefUtils.getString(PrefUtils.KEY_ACCESS_TOKEN),
       "api-version": "1.1"
     }
     return headers

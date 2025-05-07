@@ -2,34 +2,14 @@ import { preferences } from "@kit.ArkData";
 
 export class PrefUtils {
   private static instance: preferences.Preferences;
+  static KEY_IS_PRIVACY_AGREE = "is_privacy_agree"
+  static KEY_IS_FIRST = "is_first"
   static KEY_ACCESS_TOKEN: string = "access_token"
   static KEY_IS_LOGIN = "is_login"
   static KEY_REFRESH_TOKEN = "refreshToken";
 
   static init(context: Context) {
     PrefUtils.instance = preferences.getPreferencesSync(context, { name: 'global' });
-  }
-
-  static isPrivacyAgree() {
-    return Boolean(PrefUtils.instance.getSync("isAgree", false))
-  }
-
-  static setPrivacyAgree() {
-    PrefUtils.instance.putSync("isAgree", true)
-    PrefUtils.instance.flush()
-  }
-
-  static getAccessToken(): string {
-    return PrefUtils.instance.getSync("access_token", "").toString()
-  }
-
-  static setAccessToken(token: string) {
-    PrefUtils.instance.put("access_token", token)
-    PrefUtils.instance.flush()
-  }
-
-  static isLogin() {
-    return Boolean(PrefUtils.instance.getSync("is_login", false))
   }
 
   static putString(key: string, value: string) {
@@ -43,6 +23,7 @@ export class PrefUtils {
 
   static putBoolean(key: string, value: boolean) {
     PrefUtils.instance.put(key, value)
+    PrefUtils.instance.flush()
   }
 
   static getBoolean(key: string): boolean {

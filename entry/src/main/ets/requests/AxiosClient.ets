@@ -16,7 +16,9 @@ export const axiosClient = new AxiosHttpRequest({
       LogUtils.debug('网络请求Request 请求方法:', `${config.method}`);
       LogUtils.debug('网络请求Request 请求头:', `${config.headers}`);
       LogUtils.debug('网络请求Request 请求url:', `${config.url}`);
-      LogUtils.debug('网络请求Request 请求body:', `${JSON.stringify(config.data)}`);
+      if (config.method == "post") {
+        LogUtils.debug('网络请求Request 请求body:', `${JSON.stringify(config.data)}`);
+      }
       axiosClient.config.showLoading = config.showLoading
       if (config.showLoading) {
         // showLoadingDialog("加载中...")
@@ -38,14 +40,14 @@ export const axiosClient = new AxiosHttpRequest({
       LogUtils.debug('网络请求响应Response:', `\n${JSON.stringify(response.data)}`);
       //let str = JsonUtils.stringify(response.data)
       if (response.status === 200) {
-        let serverData: DataResult<CommonType> = new DataResult();
-        serverData = JSON.parse(JSON.stringify(response.data));
-        let code = serverData.code;
-        if (code == 401) {
-          promptAction.showToast({ message: '您的登录状态已失效，请重新登录', duration: 10000 })
-          router
-            .pushUrl({ url: 'pages/LoginPage' }, router.RouterMode.Single)
-        }
+        // let serverData: DataResult<CommonType> = new DataResult();
+        // serverData = JSON.parse(JSON.stringify(response.data));
+        // let code = serverData.code;
+        // if (code == 401) {
+        //   promptAction.showToast({ message: '您的登录状态已失效，请重新登录', duration: 10000 })
+        //   router
+        //     .pushUrl({ url: 'pages/LoginPage' }, router.RouterMode.Single)
+        // }
         return Promise.resolve(response.data);
       } else {
         return Promise.reject(response);

@@ -311,7 +311,7 @@ struct Login {
 
     } else {
       this.loadImageValidCode()
-      promptAction.showDialog({ message: message })
+      promptAction.showToast({ message: message })
     }
   }
 

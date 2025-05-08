@@ -17,7 +17,7 @@ const LOGIN_TYPE_OTHER = 1005; //登录类型：其他登录方式
 @Component
 struct Login {
   @State loginType: number = LOGIN_TYPE_PWD //0：手机号，1其他登录，2：工号登录 3：图形验证码登录
-  @State inputPhone: string = ""
+  @State inputAccount: string = ""
   @State inputImageCode: string = ""
   @State inputPwd: string = ""
   @State inputSmsCode: string = ""
@@ -26,6 +26,8 @@ struct Login {
   @State loginResponseBusCode: number = 0
   @State textLeft: string = ""
   @State textRight: string = "其他登录方式"
+  inputBindPhone: string = ""
+  inputBindJobNum: string = ""
   verifyCode: string = ""
   bindPhone: string = ""
 
@@ -46,8 +48,8 @@ struct Login {
         .width("100%")
         .borderRadius($r("app.float.fp_5"))
         .enabled((this.loginType == LOGIN_TYPE_PWD || this.loginType == LOGIN_TYPE_JOB) &&
-          (this.inputPhone != "" && this.inputPwd != "") ||
-          (this.loginType == LOGIN_TYPE_OTHER && this.inputImageCode != "" && this.inputPhone != "" &&
+          (this.inputAccount != "" && this.inputPwd != "") ||
+          (this.loginType == LOGIN_TYPE_OTHER && this.inputImageCode != "" && this.inputAccount != "" &&
             this.inputPwd != ""))
         .onClick(() => {
           if (this.isPrivacyChecked) {
@@ -143,7 +145,7 @@ struct Login {
   @Builder
   buildInputWithButton(inputHint: string, buttonHint: string, callback: EditableTextOnChangeCallback) {
     Row() {
-      this.buildInput(inputHint, false, 0, InputType.Number, callback)
+      this.buildInput(inputHint, false, 0, InputType.Normal, callback)
       Button(buttonHint, { type: ButtonType.Normal })
         .fontColor("#1b86f7")
         .backgroundColor(buttonHint == "忘记密码?" ? Color.Transparent : "#F4F9FF")
@@ -166,7 +168,7 @@ struct Login {
   @Builder
   buildPwd() {
     this.buildInput("输入手机号码/邮箱", true, $r("app.float.fp_100"), InputType.Normal, (value) => {
-      this.inputPhone = value
+      this.inputAccount = value
     })
     this.buildInputWithButton("输入密码", "忘记密码?", (value) => {
       this.inputPwd = value
@@ -176,7 +178,7 @@ struct Login {
   @Builder
   buildOther() {
     this.buildInput("输入手机号码/邮箱", true, $r("app.float.fp_100"), InputType.Normal, (value) => {
-      this.inputPhone = value
+      this.inputAccount = value
     })
     this.buildInputWithImageCode("输入图片验证码", (value) => {
       this.inputImageCode = value
@@ -189,20 +191,20 @@ struct Login {
   @Builder
   buildJob() {
     this.buildInput("输入工号", true, $r("app.float.fp_100"), InputType.Normal, (value) => {
-      this.inputPhone = value
+      this.inputAccount = value
     })
     this.buildInput("输入登录密码", true, 0, InputType.Normal, (value) => {
-      this.inputPhone = value
+      this.inputPwd = value
     })
     if (this.loginResponseBusCode == 2002 || this.loginResponseBusCode == 2004) {
       this.buildInputWithImageCode("输入图片验证码", (value) => {
-
+        this.inputImageCode = value
       })
       this.buildInput("输入手机号码", true, 0, InputType.PhoneNumber, (value) => {
-
+        this.bindPhone = value
       })
       this.buildInputWithButton("输入验证码", "获取验证码", (value) => {
-
+        this.inputSmsCode = value
       })
     }
   }
@@ -210,13 +212,26 @@ struct Login {
   @Builder
   buildPhoneSms() {
     this.buildInput("输入手机号", true, $r("app.float.fp_100"), InputType.PhoneNumber, (value) => {
-      this.inputPhone = value
+      this.inputAccount = value
     })
     this.buildInputWithImageCode("输入图片验证码", (value) => {
       this.inputImageCode = value
     })
     this.buildInputWithButton("输入短信验证码", "获取验证码", (value) => {
       this.inputSmsCode = value
+    })
+  }
+
+  @Builder
+  buildBindJobNum() {
+    this.buildInput("输入手机号", true, $r("app.float.fp_100"), InputType.PhoneNumber, (value) => {
+      this.inputAccount = value
+    })
+    this.buildInputWithButton("输入短信验证码", "获取验证码", (value) => {
+      this.inputSmsCode = value
+    })
+    this.buildInput("输入工号", true, 0, InputType.PhoneNumber, (value) => {
+      this.inputBindJobNum = value
     })
   }
 
@@ -245,7 +260,7 @@ struct Login {
     loginParams.source = "app"
     loginParams.version = 657
     loginParams.type = this.loginType
-    loginParams.account = this.inputPhone
+    loginParams.account = this.inputAccount
     loginParams.pwd = CryptoJS.MD5(this.inputPwd).toString().toUpperCase()
     if (this.loginType == LOGIN_TYPE_OTHER) {
       loginParams.pictureAnswer = this.inputImageCode
@@ -254,10 +269,10 @@ struct Login {
       loginParams.code = this.inputSmsCode
     } else if (this.loginType == LOGIN_TYPE_JOB && this.loginResponseBusCode == 2002 ||
       this.loginType == LOGIN_TYPE_JOB && this.loginResponseBusCode == 2004) {
-      loginParams.userPhone = "bindPhone"
-      loginParams.code = "smsCode"
+      loginParams.bindingPhone = this.inputBindPhone
+      loginParams.code = this.inputSmsCode
     } else if (this.loginType != LOGIN_TYPE_JOB && this.loginResponseBusCode == 2011) {
-      loginParams.outAccount = "jobNumber"
+      loginParams.outAccount = this.inputBindJobNum
     }
     requestLogin(loginParams).then((result) => {
       if (result.code == 1 && result.data != null) {

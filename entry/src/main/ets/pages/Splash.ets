@@ -55,7 +55,6 @@ struct Splash {
 
   checkUserLoginState() {
     getUserInfo().then((result) => {
-      LogUtils.debug("kytex", "getUserInfo" + result)
       if (null != result.data) {
         router.replaceUrl({ url: "pages/HomePage" })
       } else {

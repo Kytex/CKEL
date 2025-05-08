@@ -21,7 +21,7 @@ export function requestLogin(requestBody: LoginPostBody) {
     url: UrlConstants.API_LOGIN_JAVA + "cuser/login",
     showLoading: false,
     headers: defaultHeaders() as AxiosRequestHeaders,
-    data: requestBody,
+      data: requestBody,
   })
 }
 

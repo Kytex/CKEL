@@ -21,10 +21,10 @@ export default class EntryAbility extends UIAbility {
     // Main window is created, set main page for this ability
     hilog.info(DOMAIN, 'testTag', '%{public}s', 'Ability onWindowStageCreate');
     PrefUtils.init(this.context)
-    windowStage.getMainWindow((err,windowClass)=>{
-      if (err.code) return
-      windowClass.setWindowLayoutFullScreen(true)
-    })
+    // windowStage.getMainWindow((err,windowClass)=>{
+    //   if (err.code) return
+    //   windowClass.setWindowLayoutFullScreen(true)
+    // })
     windowStage.loadContent('pages/Splash', (err) => {
       if (err.code) {
         hilog.error(DOMAIN, 'testTag', 'Failed to load the content. Cause: %{public}s', JSON.stringify(err));

@@ -6,7 +6,19 @@ export class PrefUtils {
   static KEY_IS_FIRST = "is_first"
   static KEY_ACCESS_TOKEN: string = "access_token"
   static KEY_IS_LOGIN = "is_login"
-  static KEY_REFRESH_TOKEN = "refreshToken";
+  static KEY_IS_EXECUTIVE = "isExecutive"
+  static KEY_PARTNERCODE = "partnerCode"
+  static KEY_APPLY_COMPANY_NAME = "ApplyCompanyName";
+  static KEY_REFRESH_TOKEN = "refreshToken"
+  static KEY_ID = "KeyID";
+  static KEY_ACCOUNT = "Account";
+  static KEY_LOGIN_ACCOUNT = "loginAccount"; //登陆的帐号，以前的版本只有手机号登陆，659版本加上邮箱登录
+  static KEY_DEPARTMENT_ID = "departmentId";
+  static KEY_DEPARTMENT_NAME = "departmentName";
+  static KEY_COMPANY_ID = "CompanyID";
+  static KEY_USER_NAME = "userName";
+  static KEY_PHONE = "Phone";
+  static KEY_USER_EMAIL = "userEmail";
 
   static init(context: Context) {
     PrefUtils.instance = preferences.getPreferencesSync(context, { name: 'global' });

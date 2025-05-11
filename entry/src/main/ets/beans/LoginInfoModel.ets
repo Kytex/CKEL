@@ -1,0 +1,31 @@
+export interface LoginInfoModel {
+  userID: string
+  phone: string
+  departmentId: string
+  departmentName: string
+  companyID: string
+  accountID: string
+  userPhone: string
+  userEmail: string
+  userType: number
+  companyFalg: number
+  appVersion: string
+  appVersionCode: number
+  accessToken: string
+  refreshToken: string
+  companyAbbreviate: string
+  isExecutive: number
+  companyName: string
+  userName: string
+  partnerCode: string
+  type: number
+  sign: null
+  code: null
+  companyId: string
+  userCode: null
+  businessType: number
+  isH5Back: number
+  isH5Close: number
+  hrCompanyIds: string
+  newApp: boolean
+}

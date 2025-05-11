@@ -1,20 +1,19 @@
 import { router } from '@kit.ArkUI';
 
-export class JumpParams {
-  title: string = ""
-  url: string = ""
+export interface JumpParams {
+  title?: string
+  url: string
+}
 
-  constructor(title: string, url: string) {
-    this.title = title
-    this.url = url
-  }
+export function jumpToWeb(bundle: JumpParams) {
+  router.pushUrl({ url: "pages/CommonWebPage", params: bundle })
 }
 
 @Entry
 @Component
 struct CommonWebPage {
   @State message: string = 'Hello World';
-  title: string = ""
+  title?: string = ""
   url: string = ""
 
   aboutToAppear(): void {

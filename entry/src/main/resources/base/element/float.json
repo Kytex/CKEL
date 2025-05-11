@@ -33,6 +33,14 @@
       "value": "15fp"
     },
     {
+      "name": "fp_16",
+      "value": "16fp"
+    },
+    {
+      "name": "fp_18",
+      "value": "18fp"
+    },
+    {
       "name": "fp_20",
       "value": "20fp"
     },
@@ -41,12 +49,40 @@
       "value": "25fp"
     },
     {
+      "name": "fp_30",
+      "value": "30fp"
+    },
+    {
+      "name": "fp_35",
+      "value": "35fp"
+    },
+    {
       "name": "fp_40",
       "value": "40fp"
     },
     {
+      "name": "fp_41",
+      "value": "41fp"
+    },
+    {
       "name": "fp_50",
       "value": "50fp"
+    },
+    {
+      "name": "fp_60",
+      "value": "60fp"
+    },
+    {
+      "name": "fp_73",
+      "value": "73fp"
+    },
+    {
+      "name": "fp_75",
+      "value": "75fp"
+    },
+    {
+      "name": "fp_80",
+      "value": "80fp"
     },
     {
       "name": "fp_86",

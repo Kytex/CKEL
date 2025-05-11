@@ -19,3 +19,9 @@ export interface TitleBarOptions {
   isShowBack?: boolean
   onBackClick?: (event: ClickEvent) => void
 }
+
+export interface SmsCodeRequestBody {
+  answer: string,
+  answerKeyID: string,
+  phoneNumber: string
+}

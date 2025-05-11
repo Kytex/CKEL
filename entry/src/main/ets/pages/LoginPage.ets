@@ -1,12 +1,12 @@
 import { LoginPostBody } from '../common/customTypes'
 import { promptAction, router } from '@kit.ArkUI'
-import { requestLogin } from '../requests/ApiService'
+import { getUserInfo, requestLogin } from '../requests/ApiService'
 import CryptoJS from '@ohos/crypto-js';
-import { PrefUtils } from '../utils/PrefUtils';
-import { AppConst } from '../utils/AppConst';
 import { util } from '@kit.ArkTS';
 import { UrlConstants } from '../constants/UrlConstants';
-import { JumpParams } from './CommonWebPage';
+import { jumpToWeb } from './CommonWebPage';
+import { LoginModel } from '../beans/LoginModel';
+import { UserHelper } from '../helpers/UserHelper';
 
 const LOGIN_TYPE_PWD = 1000; //登录类型：账号密码登录
 const LOGIN_TYPE_SMS = 1001; //登录类型：短信验证码登录
@@ -66,10 +66,7 @@ struct Login {
         Text() {
           Span("已仔细阅读并同意我们的").fontColor("#666666").fontSize($r("app.float.fp_13"))
           Span("<<隐私政策>>").fontColor(Color.Blue).fontSize($r("app.float.fp_13")).onClick((event) => {
-            let linkUrl = UrlConstants.API_H5_NEW + "#/Center/HelpDetail?id=11"
-            router.pushUrl({
-              url: "pages/CommonWebPage", params: new JumpParams("隐私政策", linkUrl)
-            })
+            jumpToWeb({ title: "隐私政策", url: UrlConstants.API_H5_NEW + "#/Center/HelpDetail?id=11" })
           })
         }
       }
@@ -290,15 +287,24 @@ struct Login {
     })
   }
 
-  loginSuccess(data: object) {
-    let accessToken: string = data["accessToken"]
-    let refreshToken: string = data["refreshToken"]
-    PrefUtils.putBoolean(PrefUtils.KEY_IS_LOGIN, true)
-    PrefUtils.putString(PrefUtils.KEY_ACCESS_TOKEN, accessToken)
-    PrefUtils.putString(PrefUtils.KEY_REFRESH_TOKEN, refreshToken)
-    AppConst.accessToken = accessToken
-    AppConst.refreshToken = refreshToken
-    router.replaceUrl({ url: "pages/CommonWebPage" })
+  loginSuccess(data: LoginModel) {
+    UserHelper.saveData(data)
+    getUserInfo().then((result) => {
+      let userInfo = result.data
+      if (null != userInfo) {
+        if (result.code == 1) {
+
+          UserHelper.saveUserData(userInfo)
+        } else {
+          promptAction.showToast({ message: result.message })
+        }
+      } else {
+        promptAction.showToast({ message: "网络异常" })
+      }
+    }).catch((reason: string) => {
+      promptAction.showToast({ message: reason })
+    })
+    jumpToWeb({ url: "" })
   }
 
   loginFailed(busCode: number, message: string) {

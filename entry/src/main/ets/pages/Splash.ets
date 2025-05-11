@@ -3,7 +3,7 @@ import router from '@ohos.router';
 import { getUserInfo } from '../requests/ApiService'
 import { LogUtils } from '../utils/LogUtils';
 import { UrlConstants } from '../constants/UrlConstants';
-import { JumpParams } from './CommonWebPage';
+import { jumpToWeb } from './CommonWebPage';
 
 @Entry
 @Component
@@ -58,11 +58,11 @@ struct Splash {
       if (null != result.data) {
         router.replaceUrl({ url: "pages/HomePage" })
       } else {
-        router.replaceUrl({ url: "pages/LoginPage" })
+        router.replaceUrl({ url: "pages/ResetPwdFirstStepPage" })
       }
     }).catch((error: string) => {
       LogUtils.debug("kytex", "getUserInfo" + error)
-      router.replaceUrl({ url: "pages/LoginPage" })
+      router.replaceUrl({ url: "pages/ResetPwdFirstStepPage" })
     })
   }
 
@@ -74,10 +74,7 @@ struct Splash {
         Text() {
           Span($r("app.string.privacy_message"))
           Span("《隐私政策》").fontColor(Color.Blue).onClick(() => {
-            let linkUrl = UrlConstants.API_H5_NEW + "#/Center/HelpDetail?id=11"
-            router.pushUrl({
-              url: "pages/CommonWebPage", params: new JumpParams("隐私政策", linkUrl)
-            })
+            jumpToWeb({ title: "隐私政策", url: UrlConstants.API_H5_NEW + "#/Center/HelpDetail?id=11" })
           })
           Span("的所有条款，包括：")
         }.fontColor("#000000").margin({ top: $r("app.float.fp_10") })

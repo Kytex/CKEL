@@ -1,9 +1,9 @@
-import { buildInput, buildInputWithButton, buildInputWithImageCode } from '../common/builders';
 import { TitleBar } from '../views/TitleBar';
-import { LengthMetrics, promptAction } from '@kit.ArkUI';
-import { util } from '@kit.ArkTS';
+import { LengthMetrics, promptAction, router } from '@kit.ArkUI';
+import { HashMap, util } from '@kit.ArkTS';
 import { UrlConstants } from '../constants/UrlConstants';
-import { getResetPwdSmsCode } from '../requests/ApiService';
+import { forgetPwdRequest } from '../requests/ApiService';
+import { ZRInput, ZRInputType } from '../views/ZRInput';
 
 @Entry
 @Component
@@ -15,8 +15,6 @@ struct FindBackPwdPage {
   @State inputPhone: string = ""
   @State inputImageCode: string = ""
   @State inputSmsCode: string = ""
-  @State inputSmsCode1: string = ""
-  @State inputEmail: string = ""
   @State imageCodeUrl: string | Resource = ""
   @State successCount: number = 0
   @State remainMills: number = 0
@@ -43,14 +41,24 @@ struct FindBackPwdPage {
           .width("100%")
           .borderRadius($r("app.float.fp_5"))
           .margin({ top: $r("app.float.fp_35") })
+          .enabled(this.getNextStepBtnEnableState())
           .onClick(() => {
-
+            this.handleNextStep()
           })
       }
       .padding({ left: $r("app.float.fp_20"), right: $r("app.float.fp_20") })
     }
     .height('100%')
     .width('100%')
+  }
+
+  getNextStepBtnEnableState(): boolean {
+    const requiredFieldsMap = [
+      [this.inputPhone, this.inputImageCode, this.inputSmsCode],
+      [this.inputPhone, this.inputSmsCode]
+    ];
+    const currentFields = requiredFieldsMap[this.currentIndex] || [];
+    return currentFields.every(field => !!field.trim());
   }
 
   aboutToAppear(): void {
@@ -79,31 +87,65 @@ struct FindBackPwdPage {
   @Builder
   buildPhoneFindBack() {
     Column() {
-      buildInput("输入手机号码", InputType.PhoneNumber, $r("app.float.fp_86"), true, (value) => {
-        this.inputPhone = value
+      ZRInput({
+        type: ZRInputType.TYPE_ORIGIN,
+        hint: "输入手机号码",
+        inputType: InputType.PhoneNumber,
+        callback: (value) => {
+          this.inputPhone = value
+        }
+      }).margin({ top: $r("app.float.fp_86") })
+      ZRInput({
+        type: ZRInputType.TYPE_WITH_IMAGE,
+        hint: "输入图片验证码",
+        inputType: InputType.Number,
+        imageCodeUrl: this.imageCodeUrl,
+        onButtonClick: () => {
+          this.loadImageCode()
+        },
+        callback: (value) => {
+          this.inputImageCode = value
+        }
       })
-      buildInputWithImageCode("输入图片验证码", this.imageCodeUrl, (value) => {
-        this.inputImageCode = value
-      })
-      buildInputWithButton("输入验证码", this.remainMills == 0 ? "获取验证码" : this.remainMills + "s后重新获取",
-        (value) => {
-          this.inputSmsCode = value
-        }, (event) => {
+      ZRInput({
+        type: ZRInputType.TYPE_WITH_BUTTON,
+        hint: "输入验证码",
+        buttonHint: this.remainMills == 0 ? "获取验证码" : this.remainMills + "s后重新获取",
+        inputType: InputType.Number,
+        isButtonEnable: this.remainMills == 0 ? true : false,
+        onButtonClick: () => {
           this.getSmsCode()
-        })
+        },
+        callback: (value) => {
+          this.inputSmsCode = value
+        }
+      })
     }.width("100%")
   }
 
   @Builder
   buildEmailFindBack() {
     Column() {
-      buildInput("输入邮箱", InputType.PhoneNumber, $r("app.float.fp_86"), true, (value) => {
-        this.inputEmail = value
-      })
-      buildInputWithButton("输入验证码", "获取验证码", (value) => {
-        this.inputSmsCode1 = value
-      }, (event) => {
-        this.getSmsCode()
+      ZRInput({
+        type: ZRInputType.TYPE_ORIGIN,
+        hint: "输入邮箱",
+        inputType: InputType.Email,
+        callback: (value) => {
+          this.inputPhone = value
+        }
+      }).margin({ top: $r("app.float.fp_86") })
+      ZRInput({
+        type: ZRInputType.TYPE_WITH_BUTTON,
+        hint: "输入验证码",
+        buttonHint: this.remainMills == 0 ? "获取验证码" : this.remainMills + "s后重新获取",
+        inputType: InputType.Number,
+        isButtonEnable: this.remainMills == 0 ? true : false,
+        onButtonClick: () => {
+          this.getSmsCode()
+        },
+        callback: (value) => {
+          this.inputSmsCode = value
+        }
       })
     }.width("100%")
   }
@@ -121,7 +163,7 @@ struct FindBackPwdPage {
   }
 
   getSmsCode() {
-    getResetPwdSmsCode({
+    forgetPwdRequest({
       answer: this.inputImageCode,
       answerKeyID: this.answerKeyID,
       phoneNumber: this.inputPhone
@@ -147,5 +189,28 @@ struct FindBackPwdPage {
         clearInterval(timerId)
       }
     }, 1000)
+  }
+
+  handleNextStep() {
+    forgetPwdRequest({
+      answer: this.inputImageCode,
+      answerKeyID: this.answerKeyID,
+      phoneNumber: this.inputPhone,
+      smsCode: this.inputSmsCode
+    }).then((result) => {
+      if (result.code == 1) {
+        let data: Record<string, string> = {}
+        data["account"] = this.inputPhone
+        data["verifyCode"] = this.inputSmsCode
+        if (this.currentIndex == 0) {
+          data["answer"] = this.inputImageCode
+          data["answerKeyID"] = this.answerKeyID
+        }
+        router.pushUrl({ url: "pages/SetupPwdPage", params: data })
+      }
+      promptAction.showToast({ message: result.message })
+    }).catch((reason: string) => {
+      promptAction.showToast({ message: reason })
+    })
   }
 }

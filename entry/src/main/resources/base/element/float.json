@@ -45,8 +45,16 @@
       "value": "20fp"
     },
     {
+      "name": "fp_22",
+      "value": "22fp"
+    },
+    {
       "name": "fp_25",
       "value": "25fp"
+    },
+    {
+      "name": "fp_28",
+      "value": "28fp"
     },
     {
       "name": "fp_30",
@@ -71,6 +79,10 @@
     {
       "name": "fp_60",
       "value": "60fp"
+    },
+    {
+      "name": "fp_64",
+      "value": "64fp"
     },
     {
       "name": "fp_73",

@@ -20,8 +20,10 @@ export interface TitleBarOptions {
   onBackClick?: (event: ClickEvent) => void
 }
 
-export interface SmsCodeRequestBody {
-  answer: string,
-  answerKeyID: string,
+export interface ForgetPwdRequestBody {
+  answer: string
+  answerKeyID: string
   phoneNumber: string
+  smsCode?: string
+  password?: string
 }

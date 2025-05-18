@@ -1,10 +1,10 @@
 import { AxiosRequestHeaders } from '@ohos/axios';
-import { UserInfo } from '../beans/UserInfo'
+import { UserInfo } from '../beans/UserInfo';
 import { UrlConstants } from '../constants/UrlConstants';
 import { PrefUtils } from '../utils/PrefUtils';
-import { axiosClient } from './AxiosClient'
-import { DataResult } from './DataResult'
-import { LoginPostBody, SmsCodeRequestBody } from '../common/customTypes';
+import { axiosClient } from './AxiosClient';
+import { DataResult } from './DataResult';
+import { ForgetPwdRequestBody, LoginPostBody } from '../common/customTypes';
 import { LoginModel } from '../beans/LoginModel';
 
 export function getUserInfo() {
@@ -49,7 +49,7 @@ export function headerString(): string {
   return ""
 }
 
-export function getResetPwdSmsCode(requestBody: SmsCodeRequestBody) {
+export function forgetPwdRequest(requestBody: ForgetPwdRequestBody) {
   return axiosClient.post<DataResult<JSON>>({
     url: UrlConstants.API_LOGIN_JAVA + "cuser/verificationcode/forgetPwd",
     showLoading: false,

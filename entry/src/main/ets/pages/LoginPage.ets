@@ -1,6 +1,6 @@
-import { LoginPostBody } from '../common/customTypes'
-import { promptAction, router } from '@kit.ArkUI'
-import { getUserInfo, requestLogin } from '../requests/ApiService'
+import { LoginPostBody } from '../common/customTypes';
+import { promptAction, router } from '@kit.ArkUI';
+import { getUserInfo, requestLogin } from '../requests/ApiService';
 import CryptoJS from '@ohos/crypto-js';
 import { util } from '@kit.ArkTS';
 import { UrlConstants } from '../constants/UrlConstants';
@@ -293,7 +293,6 @@ struct Login {
       let userInfo = result.data
       if (null != userInfo) {
         if (result.code == 1) {
-
           UserHelper.saveUserData(userInfo)
         } else {
           promptAction.showToast({ message: result.message })
@@ -321,12 +320,14 @@ struct Login {
     }
   }
 
+  //加入企业
   loginFailNotIn() {
-
+    router.pushUrl({ url: "pages/CompanyTakeInPage" })
   }
 
+  //首次登陆，请修改密码
   loginChangeDefaultPwd() {
-
+    router.pushUrl({ url: "pages/ChangePwdPage" })
   }
 
   loadImageValidCode() {

@@ -58,11 +58,11 @@ struct Splash {
       if (null != result.data) {
         router.replaceUrl({ url: "pages/HomePage" })
       } else {
-        router.replaceUrl({ url: "pages/ResetPwdFirstStepPage" })
+        router.replaceUrl({ url: "pages/LoginPage" })
       }
     }).catch((error: string) => {
       LogUtils.debug("kytex", "getUserInfo" + error)
-      router.replaceUrl({ url: "pages/ResetPwdFirstStepPage" })
+      router.replaceUrl({ url: "pages/CompanyTakeInPage" })
     })
   }
 

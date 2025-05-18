@@ -3,8 +3,11 @@
     "pages/Splash",
     "pages/LoginPage",
     "pages/HomePage",
-    "pages/ResetPwdFirstStepPage",
+    "pages/FindBackPwdPage",
     "pages/CommonWebPage",
-    "pages/SetupPwdPage"
+    "pages/SetupPwdPage",
+    "pages/CompanyTakeInPage",
+    "pages/ChangePwdPage",
+    "pages/NewCompanyPage"
   ]
 }
